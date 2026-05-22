@@ -13,6 +13,9 @@ on:
 jobs:
   claude-review:
     runs-on: ubuntu-latest
+    # Fork PRs can't get id-token/secrets on pull_request events (GitHub security policy),
+    # so the OIDC flow fails. Auto-run only on same-repo PRs; use workflow_dispatch for forks.
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
     permissions:
       contents: read
       pull-requests: write
@@ -24,6 +27,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 1
+          ref: ${{ github.event.pull_request.head.sha || format('refs/pull/{0}/merge', inputs.pr_number) }}
 
       - name: Run Claude Code Review
         id: claude-review
