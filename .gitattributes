@@ -18,4 +18,5 @@
 *.md text eol=lf
 *.txt text eol=lf
 CMakeLists.txt text eol=lf
+debian/ export-ignore
 headsetcontrol.spec export-ignore
